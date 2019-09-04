@@ -1,6 +1,6 @@
 import weechat, re
 
-SCRIPT_NAME    = "glitter"
+SCRIPT_NAME    = "rainbow"
 SCRIPT_AUTHOR  = "jotham.read@gmail.com"
 SCRIPT_VERSION = "0.1"
 SCRIPT_LICENSE = "GPL3"
