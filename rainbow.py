@@ -1,4 +1,4 @@
-import weechat, re
+import weechat, re, random
 
 SCRIPT_NAME    = "rainbow"
 SCRIPT_AUTHOR  = "jotham.read@gmail.com"
@@ -13,7 +13,8 @@ glitter_pat = re.compile("\*\*\*([^\*]+)\*\*\*")
 def glitter_it(match):
    lut = ("13","4","8","9","11","12") # len=6
    text = match.group(1)
-   return "".join(["\03"+lut[i%6]+text[i] for i in range(len(text))]) + "\03"
+   o = random.randrange(0,6)
+   return "".join(["\03"+lut[(o+i)%6]+text[i] for i in range(len(text))]) + "\03"
 
 def command_run_input(data, buffer, command):
    if command == "/input return":
