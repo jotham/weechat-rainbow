@@ -1,20 +1,32 @@
-import weechat, re, random
+#!/usr/bin/env python
 
 SCRIPT_NAME    = "rainbow"
 SCRIPT_AUTHOR  = "jotham.read@gmail.com"
-SCRIPT_VERSION = "0.1"
+SCRIPT_VERSION = "0.2"
 SCRIPT_LICENSE = "GPL3"
 SCRIPT_DESC    = "Replaces ***text*** in input buffer with rainbow text"
 
-if weechat.register(SCRIPT_NAME, SCRIPT_AUTHOR, SCRIPT_VERSION, SCRIPT_LICENSE, SCRIPT_DESC, "", ""):
-   weechat.hook_command_run("/input return", "command_run_input", "")
+# Hook configuration:
+#    MESSAGE. Doesn't modify buffer history, doesn't capture commands like /me /msg etc.
+#    INPUT. Modifies buffer history, captures commands like /me /msg etc.
+MODE="MESSAGE"
+
+import re
 
 glitter_pat = re.compile("\*\*\*([^\*]+)\*\*\*")
-def glitter_it(match):
-   lut = ("13","4","8","9","11","12") # len=6
-   text = match.group(1)
-   o = random.randrange(0,6)
-   return "".join(["\03"+lut[(o+i)%6]+text[i] for i in range(len(text))]) + "\03"
+def glitter_it(input_re):
+   lut = ("13","04","08","09","11","12") # len=6
+   text = input_re.group(1)
+   characters = []
+   for i, character in enumerate(text):
+      if character == ' ' or character == ',':
+         characters.append(character)
+      else:
+         characters.append("\x03"+lut[i%6]+character)
+   return "".join(characters) + "\x0399"
+
+def command_input_text_for_buffer(data, modifier, modifier_data, input):
+   return glitter_pat.sub(glitter_it, input)
 
 def command_run_input(data, buffer, command):
    if command == "/input return":
@@ -24,3 +36,23 @@ def command_run_input(data, buffer, command):
       input = glitter_pat.sub(glitter_it, input)
       weechat.buffer_set(buffer, 'input', input)
    return weechat.WEECHAT_RC_OK
+
+try:
+   import weechat
+except ImportError:
+   pass
+else:
+   if weechat.register(SCRIPT_NAME, SCRIPT_AUTHOR, SCRIPT_VERSION, SCRIPT_LICENSE, SCRIPT_DESC, "", ""):
+      if MODE == "MESSAGE":
+         weechat.hook_modifier("input_text_for_buffer", "command_input_text_for_buffer", "")
+      else:
+         weechat.hook_command_run("/input return", "command_run_input", "")
+
+if __name__ == '__main__':
+   import sys
+   if len(sys.argv) > 1:
+      input = ' '.join(sys.argv[1:])
+   else:
+      input = 'Hello ***world!***'
+   print(glitter_pat.sub(glitter_it, input).replace("\x03", "^C"))
+
