@@ -7,9 +7,11 @@ SCRIPT_LICENSE = "GPL3"
 SCRIPT_DESC    = "Replaces ***text*** in input buffer with rainbow text"
 
 # Hook configuration:
-#    MESSAGE. Doesn't modify buffer history, doesn't capture commands like /me /msg etc.
+#
+#    MESSAGE. Doesn't modify buffer history, wont fire on all commands?
 #    INPUT. Modifies buffer history, captures commands like /me /msg etc.
-MODE="MESSAGE"
+
+MODE="INPUT"
 
 import re
 
@@ -40,19 +42,17 @@ def command_run_input(data, buffer, command):
 try:
    import weechat
 except ImportError:
-   pass
-else:
-   if weechat.register(SCRIPT_NAME, SCRIPT_AUTHOR, SCRIPT_VERSION, SCRIPT_LICENSE, SCRIPT_DESC, "", ""):
-      if MODE == "MESSAGE":
-         weechat.hook_modifier("input_text_for_buffer", "command_input_text_for_buffer", "")
-      else:
-         weechat.hook_command_run("/input return", "command_run_input", "")
-
-if __name__ == '__main__':
+   # Assume commandline mode
    import sys
    if len(sys.argv) > 1:
       input = ' '.join(sys.argv[1:])
    else:
       input = 'Hello ***world!***'
    print(glitter_pat.sub(glitter_it, input).replace("\x03", "^C"))
+else:
+   if weechat.register(SCRIPT_NAME, SCRIPT_AUTHOR, SCRIPT_VERSION, SCRIPT_LICENSE, SCRIPT_DESC, "", ""):
+      if MODE == "MESSAGE":
+         weechat.hook_modifier("input_text_for_buffer", "command_input_text_for_buffer", "")
+      else:
+         weechat.hook_command_run("/input return", "command_run_input", "")
 
