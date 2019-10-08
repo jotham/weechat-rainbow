@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 #!/usr/bin/env python
 
 SCRIPT_NAME    = 'rainbow'
@@ -18,14 +19,14 @@ import re
 glitter_pat = re.compile('\*\*\*([^\*]+)\*\*\*')
 def glitter_it(input_re):
    lut = ('13','04','08','09','11','12') # len=6
-   text = input_re.group(1)
+   text = input_re.group(1).decode('utf-8')
    characters = []
    for i, character in enumerate(text):
       if character == ' ' or character == ',':
          characters.append(character)
       else:
          characters.append('\x03'+lut[i%6]+character)
-   return unicode("".join(characters) + '\x0399' + '\x0F')
+   return "".join(characters).encode('utf-8') + '\x0399' + '\x0F'
 
 def command_input_text_for_buffer(data, modifier, modifier_data, input):
    return glitter_pat.sub(glitter_it, input)
