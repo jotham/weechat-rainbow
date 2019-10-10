@@ -16,7 +16,7 @@ MODE='INPUT'
 
 import re
 
-glitter_pat = re.compile('\*\*\*([^\*]+)\*\*\*')
+glitter_pat = re.compile('\*{3}(.+)\*{3}')
 def glitter_it(input_re):
    lut = ('13','04','08','09','11','12') # len=6
    text = input_re.group(1).decode('utf-8')
@@ -48,7 +48,7 @@ except ImportError:
    if len(sys.argv) > 1:
       input = ' '.join(sys.argv[1:])
    else:
-      input = 'Hello ***world!***'
+      input = 'Hello ***wor*ld!***'
    print(glitter_pat.sub(glitter_it, input).replace('\x03', '^C'))
 else:
    if weechat.register(SCRIPT_NAME, SCRIPT_AUTHOR, SCRIPT_VERSION, SCRIPT_LICENSE, SCRIPT_DESC, '', ''):
