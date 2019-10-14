@@ -71,11 +71,11 @@ except ImportError:
       input = ' '.join(sys.argv[1:])
    else:
       input = 'Hello ***wor*ld!***'
-   glit = glitter_pat.sub(glitter_it, input).replace("\x03", "^C")
-   pat = re.findall("\^C(\d{2})", glit)
+   glit = glitter_pat.sub(glitter_it, input)
+   pat = re.findall("\\x03(\d{2})", glit)
    for color in pat:
       glit = glit.replace(color, cc[color])
-   print(glit.replace("^C", ""))
+   print(glit)
 
 else:
    if weechat.register(SCRIPT_NAME, SCRIPT_AUTHOR, SCRIPT_VERSION, SCRIPT_LICENSE, SCRIPT_DESC, '', ''):
