@@ -45,11 +45,38 @@ try:
 except ImportError:
    # Assume commandline mode
    import sys
+   cc ={
+      # couple of these translate to the nearest
+      "00": "\033[97m", # white
+      "01": "\033[30m", # black
+      "02": "\033[34m", # blue
+      "03": "\033[32m", # green
+      "04": "\033[91m", # red -> light red
+      "05": "\033[31m", # brown -> red
+      "06": "\033[35m", # purple
+      "07": "\033[33m", # orange -> yellow
+      "08": "\033[93m", # yellow -> light yellow
+      "09": "\033[92m", # light green
+      "10": "\033[36m", # cyan
+      "11": "\033[96m", # light cyan
+      "12": "\033[94m", # light blue
+      "13": "\033[95m", # pink -> light magenta
+      "14": "\033[90m", # grey -> dark grey
+      "15": "\033[37m", # light grey
+      "99": "\033[0m",  # reset
+
+   }
+
    if len(sys.argv) > 1:
       input = ' '.join(sys.argv[1:])
    else:
       input = 'Hello ***wor*ld!***'
-   print(glitter_pat.sub(glitter_it, input).replace('\x03', '^C'))
+   glit = glitter_pat.sub(glitter_it, input)
+   pat = re.findall("\\x03(\d{2})", glit)
+   for color in pat:
+      glit = glit.replace(color, cc[color])
+   print(glit)
+
 else:
    if weechat.register(SCRIPT_NAME, SCRIPT_AUTHOR, SCRIPT_VERSION, SCRIPT_LICENSE, SCRIPT_DESC, '', ''):
       if MODE == 'MESSAGE':
