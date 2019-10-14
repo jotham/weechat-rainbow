@@ -64,9 +64,7 @@ except ImportError:
       "14": "\033[90m", # grey -> dark grey
       "15": "\033[37m", # light grey
       "99": "\033[0m",  # reset
-
    }
-
    if len(sys.argv) > 1:
       input = ' '.join(sys.argv[1:])
    else:
