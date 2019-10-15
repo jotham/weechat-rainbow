@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 SCRIPT_NAME    = 'rainbow'
 SCRIPT_AUTHOR  = 'jotham.read@gmail.com'
