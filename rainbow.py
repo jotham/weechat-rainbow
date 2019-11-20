@@ -16,7 +16,7 @@ MODE='INPUT'
 
 import re
 
-glitter_pat = re.compile('(?:\*{3}([^*].*?)\*{3})')
+glitter_pat = re.compile('\*{3}([^*].*?)\*{3}')
 def glitter_it(input_re):
    lut = ('13','04','08','09','11','12') # len=6
    text = input_re.group(1).decode('utf-8')
